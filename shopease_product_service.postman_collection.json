@@ -1,0 +1,262 @@
+{
+  "info": {
+    "_postman_id": "shopease-product-service-v1",
+    "name": "ShopEase - Product Management Service",
+    "description": "Postman Collection for testing ShopEase Product Microservice running in Docker.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8003",
+      "type": "string"
+    },
+    {
+      "key": "productId",
+      "value": "1",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/health",
+          "host": ["{{baseUrl}}"],
+          "path": ["health"]
+        },
+        "description": "Check if the Dockerized FastAPI application is healthy."
+      }
+    },
+    {
+      "name": "1. Create Product - Valid Info (201 Created)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Sony WH-1000XM5 Headphones\",\n  \"description\": \"Industry leading wireless noise-canceling headphones\",\n  \"price\": 399.99,\n  \"stock_quantity\": 50,\n  \"category\": \"Electronics\",\n  \"status\": \"Active\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/products/",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "products", ""]
+        }
+      }
+    },
+    {
+      "name": "2. Create Product - Empty Name (422 Error)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"   \",\n  \"description\": \"Empty name test\",\n  \"price\": 49.99,\n  \"stock_quantity\": 10,\n  \"category\": \"Electronics\",\n  \"status\": \"Active\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/products/",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "products", ""]
+        }
+      }
+    },
+    {
+      "name": "3. Create Product - Negative Price (422 Error)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Invalid Price Mouse\",\n  \"description\": \"Negative price test\",\n  \"price\": -25.00,\n  \"stock_quantity\": 15,\n  \"category\": \"Electronics\",\n  \"status\": \"Active\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/products/",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "products", ""]
+        }
+      }
+    },
+    {
+      "name": "4. Create Product - Negative Stock (422 Error)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Invalid Stock Keyboard\",\n  \"description\": \"Negative stock test\",\n  \"price\": 89.99,\n  \"stock_quantity\": -5,\n  \"category\": \"Electronics\",\n  \"status\": \"Active\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/products/",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "products", ""]
+        }
+      }
+    },
+    {
+      "name": "5. Retrieve All Products (200 OK)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/products/",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "products", ""]
+        }
+      }
+    },
+    {
+      "name": "6. Retrieve Product by Valid ID (200 OK)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/products/{{productId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "products", "{{productId}}"]
+        }
+      }
+    },
+    {
+      "name": "7. Retrieve Product by Invalid ID (404 Not Found)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/products/99999",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "products", "99999"]
+        }
+      }
+    },
+    {
+      "name": "8. Update Product (200 OK)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"price\": 349.99,\n  \"stock_quantity\": 60,\n  \"description\": \"Special Holiday Promo with extended warranty\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/products/{{productId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "products", "{{productId}}"]
+        }
+      }
+    },
+    {
+      "name": "9. Delete Product (204 No Content)",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/products/{{productId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "products", "{{productId}}"]
+        }
+      }
+    },
+    {
+      "name": "10. Retrieve Deleted Product (404 Not Found)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/products/{{productId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "products", "{{productId}}"]
+        }
+      }
+    },
+    {
+      "name": "11. Category Filtering (?category=Furniture)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/products/?category=Furniture",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "products", ""],
+          "query": [
+            {
+              "key": "category",
+              "value": "Furniture"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "12. Pagination - Page 1 (?skip=0&limit=2)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/products/?skip=0&limit=2",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "products", ""],
+          "query": [
+            {
+              "key": "skip",
+              "value": "0"
+            },
+            {
+              "key": "limit",
+              "value": "2"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "13. Pagination - Page 2 (?skip=2&limit=2)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/products/?skip=2&limit=2",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "products", ""],
+          "query": [
+            {
+              "key": "skip",
+              "value": "2"
+            },
+            {
+              "key": "limit",
+              "value": "2"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

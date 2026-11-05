@@ -1,0 +1,2 @@
+"""Authentication microservice test suite."""
+

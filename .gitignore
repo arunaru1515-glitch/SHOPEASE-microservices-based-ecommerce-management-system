@@ -1,22 +1,27 @@
-# Virtual Environment
-venv/
-.venv/
-env/
-
-# Byte-compiled / optimized / DLL files
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-
 # Environment files
 .env
+.env.*
+!.env.example
 
-# IDEs
-.vscode/
-.idea/
-
-# Testing
+# Python
+__pycache__/
+*.py[cod]
 .pytest_cache/
-.coverage
-htmlcov/
+
+# Virtual environments
+venv/
+.venv/
+
+# Database
+*.db
+*.sqlite3
+
+# Frontend
+node_modules/
+dist/
+
+# IDE
+.vscode/
+
+# Logs
+*.log

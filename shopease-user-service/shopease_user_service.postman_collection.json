@@ -1,0 +1,338 @@
+{
+  "info": {
+    "_postman_id": "shopease-user-service-collection",
+    "name": "ShopEase - User Management Microservice",
+    "description": "Postman Collection for testing ShopEase User Management Service APIs (Profiles, Addresses, Default Address, and Account Management)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8002",
+      "type": "string"
+    },
+    {
+      "key": "authToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "addressId",
+      "value": "1",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["health"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "1. User Profiles",
+      "item": [
+        {
+          "name": "Create Profile (POST /api/users/profile)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"full_name\": \"John Doe\",\n  \"phone_number\": \"+1234567890\",\n  \"date_of_birth\": \"1990-05-15\",\n  \"gender\": \"Male\",\n  \"profile_image\": \"https://example.com/avatar.jpg\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/users/profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", "profile"]
+            }
+          }
+        },
+        {
+          "name": "Get Current User Profile (GET /api/users/profile)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/users/profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", "profile"]
+            }
+          }
+        },
+        {
+          "name": "Update Profile Full (PUT /api/users/profile)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"full_name\": \"John Jonathan Doe\",\n  \"phone_number\": \"+19876543210\",\n  \"date_of_birth\": \"1990-05-15\",\n  \"gender\": \"Male\",\n  \"profile_image\": \"https://example.com/new_avatar.jpg\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/users/profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", "profile"]
+            }
+          }
+        },
+        {
+          "name": "Patch Profile Partial (PATCH /api/users/profile)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phone_number\": \"+15554443322\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/users/profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", "profile"]
+            }
+          }
+        },
+        {
+          "name": "Delete Profile (DELETE /api/users/profile)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/users/profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", "profile"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Delivery Addresses",
+      "item": [
+        {
+          "name": "Add New Address (POST /api/users/addresses)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"address_type\": \"Home\",\n  \"full_name\": \"John Doe\",\n  \"phone_number\": \"+1234567890\",\n  \"address_line_1\": \"100 Broadway St\",\n  \"address_line_2\": \"Apt 4B\",\n  \"city\": \"New York\",\n  \"state\": \"NY\",\n  \"country\": \"USA\",\n  \"postal_code\": \"10001\",\n  \"is_default\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/users/addresses",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", "addresses"]
+            }
+          }
+        },
+        {
+          "name": "List All Addresses (GET /api/users/addresses)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/users/addresses",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", "addresses"]
+            }
+          }
+        },
+        {
+          "name": "Get Specific Address (GET /api/users/addresses/{id})",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/users/addresses/{{addressId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", "addresses", "{{addressId}}"]
+            }
+          }
+        },
+        {
+          "name": "Update Address (PUT /api/users/addresses/{id})",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"address_type\": \"Office\",\n  \"full_name\": \"John Doe\",\n  \"phone_number\": \"+1234567890\",\n  \"address_line_1\": \"500 Fifth Avenue\",\n  \"address_line_2\": \"Suite 1200\",\n  \"city\": \"New York\",\n  \"state\": \"NY\",\n  \"country\": \"USA\",\n  \"postal_code\": \"10018\",\n  \"is_default\": false\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/users/addresses/{{addressId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", "addresses", "{{addressId}}"]
+            }
+          }
+        },
+        {
+          "name": "Set Default Address (PATCH /api/users/addresses/{id}/default)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/users/addresses/{{addressId}}/default",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", "addresses", "{{addressId}}", "default"]
+            }
+          }
+        },
+        {
+          "name": "Delete Address (DELETE /api/users/addresses/{id})",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/users/addresses/{{addressId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", "addresses", "{{addressId}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Account Management",
+      "item": [
+        {
+          "name": "Get Account Dashboard (GET /api/users/account)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/users/account",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", "account"]
+            }
+          }
+        },
+        {
+          "name": "Deactivate Profile (PATCH /api/users/account/deactivate)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/users/account/deactivate",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", "account", "deactivate"]
+            }
+          }
+        },
+        {
+          "name": "Reactivate Profile (PATCH /api/users/account/reactivate)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/users/account/reactivate",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", "account", "reactivate"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
+

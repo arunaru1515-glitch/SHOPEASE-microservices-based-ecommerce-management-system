@@ -1,0 +1,61 @@
+services:
+  user-db:
+    image: mysql:8.0
+    container_name: shopease-user-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-shopease_password}
+      MYSQL_DATABASE: ${DB_NAME:-shopease_user_db}
+      MYSQL_USER: ${DB_USER:-shopease_user}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-shopease_password}
+    ports:
+      - "3308:3306"
+    volumes:
+      - user_db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -u $$MYSQL_USER -p$$MYSQL_PASSWORD || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - shopease-network
+
+  user-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: shopease-user-service
+    restart: unless-stopped
+    ports:
+      - "8002:8002"
+    environment:
+      APP_NAME: ${APP_NAME:-ShopEase-User-Service}
+      APP_ENV: ${APP_ENV:-production}
+      APP_PORT: 8002
+      DB_HOST: user-db
+      DB_PORT: 3306
+      DB_USER: ${DB_USER:-shopease_user}
+      DB_PASSWORD: ${DB_PASSWORD:-shopease_password}
+      DB_NAME: ${DB_NAME:-shopease_user_db}
+      DATABASE_URL: mysql+pymysql://${DB_USER:-shopease_user}:${DB_PASSWORD:-shopease_password}@user-db:3306/${DB_NAME:-shopease_user_db}?charset=utf8mb4
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY:-supersecretjwtkey_change_in_production_1234567890!@#$%}
+      JWT_ALGORITHM: ${JWT_ALGORITHM:-HS256}
+      AUTH_SERVICE_URL: ${AUTH_SERVICE_URL:-http://auth-service:8001}
+    depends_on:
+      user-db:
+        condition: service_healthy
+    command: >
+      sh -c "alembic upgrade head &&
+             uvicorn app.main:app --host 0.0.0.0 --port 8002"
+    networks:
+      - shopease-network
+
+volumes:
+  user_db_data:
+    driver: local
+
+networks:
+  shopease-network:
+    driver: bridge
+

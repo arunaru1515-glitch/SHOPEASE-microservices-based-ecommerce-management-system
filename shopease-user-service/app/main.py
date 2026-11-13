@@ -11,12 +11,11 @@ from app.routers.account_routes import router as account_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # For SQLite/local dev, ensure tables exist; in MySQL, Alembic manages schemas
-    if not settings.get_database_url().startswith("mysql"):
-        try:
-            Base.metadata.create_all(bind=engine)
-        except Exception as exc:
-            print(f"Database initialization warning: {exc}")
+    # Ensure database tables exist on startup (especially helpful for local testing)
+    try:
+        Base.metadata.create_all(bind=engine)
+    except Exception as exc:
+        print(f"Database initialization warning: {exc}")
     yield
 
 

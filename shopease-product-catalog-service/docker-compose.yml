@@ -1,0 +1,62 @@
+services:
+  catalog-db:
+    image: mysql:8.0
+    container_name: shopease-catalog-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-shopease_password}
+      MYSQL_DATABASE: ${DB_NAME:-shopease_product_catalog_db}
+      MYSQL_USER: ${DB_USER:-shopease_user}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-shopease_password}
+    ports:
+      - "3309:3306"
+    volumes:
+      - catalog_db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -u $$MYSQL_USER -p$$MYSQL_PASSWORD || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - shopease-network
+
+  catalog-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: shopease-catalog-service
+    restart: unless-stopped
+    ports:
+      - "8004:8004"
+    environment:
+      APP_NAME: ${APP_NAME:-ShopEase-Product-Catalog-Service}
+      APP_ENV: ${APP_ENV:-production}
+      APP_PORT: 8004
+      DB_HOST: catalog-db
+      DB_PORT: 3306
+      DB_USER: ${DB_USER:-shopease_user}
+      DB_PASSWORD: ${DB_PASSWORD:-shopease_password}
+      DB_NAME: ${DB_NAME:-shopease_product_catalog_db}
+      DATABASE_URL: mysql+pymysql://${DB_USER:-shopease_user}:${DB_PASSWORD:-shopease_password}@catalog-db:3306/${DB_NAME:-shopease_product_catalog_db}?charset=utf8mb4
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY:-supersecretjwtkey_change_in_production_1234567890!@#$%}
+      JWT_ALGORITHM: ${JWT_ALGORITHM:-HS256}
+      AUTH_SERVICE_URL: ${AUTH_SERVICE_URL:-http://auth-service:8001}
+      DEFAULT_LOW_STOCK_THRESHOLD: ${DEFAULT_LOW_STOCK_THRESHOLD:-10}
+    depends_on:
+      catalog-db:
+        condition: service_healthy
+    command: >
+      sh -c "alembic upgrade head &&
+             uvicorn app.main:app --host 0.0.0.0 --port 8004"
+    networks:
+      - shopease-network
+
+volumes:
+  catalog_db_data:
+    driver: local
+
+networks:
+  shopease-network:
+    driver: bridge
+

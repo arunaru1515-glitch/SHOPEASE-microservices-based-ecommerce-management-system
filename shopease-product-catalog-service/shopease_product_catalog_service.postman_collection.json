@@ -1,0 +1,763 @@
+{
+  "info": {
+    "_postman_id": "shopease-product-catalog-service-collection",
+    "name": "ShopEase - Product Catalog Microservice",
+    "description": "Postman Collection for testing ShopEase Product Catalog Microservice APIs (Categories, Products, Search/Filter/Pagination, Inventory Transactions, and RBAC)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8004",
+      "type": "string"
+    },
+    {
+      "key": "adminToken",
+      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJhZG1pbkBzaG9wZWFzZS5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3OTQ1NTMxMjIsImV4cCI6MTc5NzE0NTEyMn0.NM-BWeR0n17mEtcCzUvrV-zxxP6JERt8ffvUJSla71c",
+      "type": "string"
+    },
+    {
+      "key": "customerToken",
+      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyIiwiZW1haWwiOiJjdXN0b21lckBzaG9wZWFzZS5jb20iLCJyb2xlIjoiY3VzdG9tZXIiLCJpYXQiOjE3OTQ1NTMxMjIsImV4cCI6MTc5NzE0NTEyMn0.yna6aR0au7PbI5e2rONCfpTzAN0H_R9Oq2qpBzjdnsE",
+      "type": "string"
+    },
+    {
+      "key": "categoryId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "productId",
+      "value": "1",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["health"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Categories",
+      "item": [
+        {
+          "name": "Create Category (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Electronics\",\n  \"description\": \"Smartphones, Laptops, and Gadgets\",\n  \"is_active\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/categories/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "categories", ""]
+            }
+          }
+        },
+        {
+          "name": "Create Duplicate Category (409 Conflict)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Electronics\",\n  \"description\": \"Duplicate category check\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/categories/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "categories", ""]
+            }
+          }
+        },
+        {
+          "name": "List Categories",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/categories/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "categories", ""]
+            }
+          }
+        },
+        {
+          "name": "Get Category by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/categories/{{categoryId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "categories", "{{categoryId}}"]
+            }
+          }
+        },
+        {
+          "name": "Update Category (Admin)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Consumer Electronics\",\n  \"description\": \"Updated description\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/categories/{{categoryId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "categories", "{{categoryId}}"]
+            }
+          }
+        },
+        {
+          "name": "Delete Category (Admin)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/categories/{{categoryId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "categories", "{{categoryId}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Products",
+      "item": [
+        {
+          "name": "Create Product (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"MacBook Pro 16-inch M3\",\n  \"description\": \"Apple M3 Max Chip, 36GB RAM, 1TB SSD\",\n  \"sku\": \"MBP-16-M3-001\",\n  \"category_id\": {{categoryId}},\n  \"price\": 3499.99,\n  \"discount_price\": 3299.99,\n  \"stock_quantity\": 25,\n  \"image_url\": \"https://images.unsplash.com/photo-1517336714731-489689fd1ca8\",\n  \"brand\": \"Apple\",\n  \"is_active\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/products/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "products", ""]
+            }
+          }
+        },
+        {
+          "name": "Create Product - Duplicate SKU (409 Conflict)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Duplicate SKU Laptop\",\n  \"sku\": \"MBP-16-M3-001\",\n  \"category_id\": {{categoryId}},\n  \"price\": 2999.99,\n  \"stock_quantity\": 10\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/products/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "products", ""]
+            }
+          }
+        },
+        {
+          "name": "Create Product - Invalid Category (400 Bad Request)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Orphan Product\",\n  \"sku\": \"ORPHAN-001\",\n  \"category_id\": 99999,\n  \"price\": 99.99,\n  \"stock_quantity\": 10\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/products/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "products", ""]
+            }
+          }
+        },
+        {
+          "name": "Create Product - Negative Price (422 Unprocessable)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Negative Price Product\",\n  \"sku\": \"NEG-001\",\n  \"category_id\": {{categoryId}},\n  \"price\": -50.00,\n  \"stock_quantity\": 10\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/products/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "products", ""]
+            }
+          }
+        },
+        {
+          "name": "List Products (Customer / Active)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/products/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "products", ""]
+            }
+          }
+        },
+        {
+          "name": "Get Product Details by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/products/{{productId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "products", "{{productId}}"]
+            }
+          }
+        },
+        {
+          "name": "Get Product Details - Invalid ID (404 Not Found)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/products/999999",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "products", "999999"]
+            }
+          }
+        },
+        {
+          "name": "Update Product Details (Admin)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"MacBook Pro 16-inch M3 Space Black\",\n  \"description\": \"Updated description with Space Black colorway\",\n  \"sku\": \"MBP-16-M3-001\",\n  \"category_id\": {{categoryId}},\n  \"price\": 3449.99,\n  \"discount_price\": 3199.99,\n  \"stock_quantity\": 30,\n  \"brand\": \"Apple\",\n  \"is_active\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/products/{{productId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "products", "{{productId}}"]
+            }
+          }
+        },
+        {
+          "name": "Partial Update Product (Admin)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"price\": 3399.99,\n  \"discount_price\": 3149.99\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/products/{{productId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "products", "{{productId}}"]
+            }
+          }
+        },
+        {
+          "name": "Delete Product (Admin)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/products/{{productId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "products", "{{productId}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Search, Filtering & Pagination",
+      "item": [
+        {
+          "name": "Search by Keyword",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/products/?search=MacBook",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "products", ""],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "MacBook"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Filter by Category",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/products/?category_id={{categoryId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "products", ""],
+              "query": [
+                {
+                  "key": "category_id",
+                  "value": "{{categoryId}}"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Filter by Price Range",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/products/?min_price=1000&max_price=4000",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "products", ""],
+              "query": [
+                {
+                  "key": "min_price",
+                  "value": "1000"
+                },
+                {
+                  "key": "max_price",
+                  "value": "4000"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Filter by In Stock Only",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/products/?in_stock=true",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "products", ""],
+              "query": [
+                {
+                  "key": "in_stock",
+                  "value": "true"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Sort by Price Ascending",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/products/?sort_by=price&sort_order=asc",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "products", ""],
+              "query": [
+                {
+                  "key": "sort_by",
+                  "value": "price"
+                },
+                {
+                  "key": "sort_order",
+                  "value": "asc"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Sort by Price Descending",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/products/?sort_by=price&sort_order=desc",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "products", ""],
+              "query": [
+                {
+                  "key": "sort_by",
+                  "value": "price"
+                },
+                {
+                  "key": "sort_order",
+                  "value": "desc"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Pagination (Page 1, Size 5)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/products/?page=1&page_size=5",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "products", ""],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "page_size",
+                  "value": "5"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Inventory Management",
+      "item": [
+        {
+          "name": "Get Current Stock",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/inventory/{{productId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "inventory", "{{productId}}"]
+            }
+          }
+        },
+        {
+          "name": "Stock IN - Increase Stock (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"quantity\": 15,\n  \"remarks\": \"Shipment received from supplier\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/inventory/{{productId}}/stock-in",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "inventory", "{{productId}}", "stock-in"]
+            }
+          }
+        },
+        {
+          "name": "Stock OUT - Decrease Stock (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"quantity\": 5,\n  \"remarks\": \"Customer order dispatched\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/inventory/{{productId}}/stock-out",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "inventory", "{{productId}}", "stock-out"]
+            }
+          }
+        },
+        {
+          "name": "Stock OUT - Attempt Reduce Below Zero (400 Bad Request)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"quantity\": 9999,\n  \"remarks\": \"Excessive deduction test\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/inventory/{{productId}}/stock-out",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "inventory", "{{productId}}", "stock-out"]
+            }
+          }
+        },
+        {
+          "name": "View Stock History (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/inventory/{{productId}}/history?limit=50",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "inventory", "{{productId}}", "history"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "50"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "List Low Stock Products (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/inventory/low-stock?threshold=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "inventory", "low-stock"],
+              "query": [
+                {
+                  "key": "threshold",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Security & RBAC Checks",
+      "item": [
+        {
+          "name": "Access Admin API without Token (401 Unauthorized)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Unauthorized Category\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/categories/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "categories", ""]
+            }
+          }
+        },
+        {
+          "name": "Access Admin API with Customer Role (403 Forbidden)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customerToken}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Customer Created Category\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/categories/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "categories", ""]
+            }
+          }
+        },
+        {
+          "name": "Access Protected API with Invalid Token (401 Unauthorized)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer invalid.fake.token.here",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Fake Token Category\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/categories/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "categories", ""]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
+
